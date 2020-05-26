@@ -1,0 +1,56 @@
+#endpoints:
+#  restart:
+#    enabled: true
+#  shutdown:
+#    enabled: true
+#  health:
+#    sensitive: false
+
+zuul:
+  prefix: /api
+  ignored-services: '*'
+  routes:
+    account: 
+      path: /account/**
+      serviceId: account-service
+    customer: 
+      path: /customer/**
+      serviceId: customer-service
+
+
+keycloak:
+    auth-server-url: http://localhost:8080/auth
+    bearer-only: true
+    credentials:
+        secret: secret
+    realm: spring-boot-quickstart
+    resource: app-authz-rest-springboot
+    securityConstraints:
+    -   authRoles:
+        - user
+        securityCollections:
+        -   name: protected
+            patterns:
+            - /*
+    ssl-required: external
+    
+hystrix:
+   command:
+      default:
+         execution:
+            iso lation:
+               thread:
+                  timeoutInMilliseconds: 30000
+
+ribbon:
+  ReadTimeout: 60000
+  connection-timeout: 3000
+  eureka:
+    enabled: true
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+#    registerWithEureka: false
+#    fetchRegistry: false
